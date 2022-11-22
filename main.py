@@ -14,8 +14,7 @@ chrome_driver_path = "/Users/tinalee/Documents/dev/chromedriver"
 service = ChromeService(executable_path=chrome_driver_path)
 driver = webdriver.Chrome(service=service)
 
-search_url = "https://www.linkedin.com/jobs/search/?currentJobId=3256750813&f_E=2&f_JT=F&geoId=104116203&keywords=python" \
-             "%20software%20engineer&location=Seattle%2C%20Washington%2C%20United%20States&refresh=true&start=50"
+search_url = "https://www.linkedin.com/jobs/search/"
 driver.get(search_url)
 time.sleep(5)
 sign_in = driver.find_element(By.CLASS_NAME, "nav__button-secondary")
@@ -29,4 +28,27 @@ password.send_keys(os.getenv("LINKEDIN_PASSWORD"))
 
 sign_in_button = driver.find_element(By.CLASS_NAME, "btn__primary--large")
 sign_in_button.click()
-time.sleep(1000)
+
+search_box = driver.find_element(By.CLASS_NAME, "jobs-search-box__text-input")
+search_box.send_keys("python developer")
+
+search_button = driver.find_element(By.CLASS_NAME, "jobs-search-box__submit-button")
+search_button.click()
+time.sleep(5)
+easy_apply_filter = driver.find_element(By.CLASS_NAME, "search-reusables__filter-binary-toggle")
+easy_apply_filter.click()
+time.sleep(5)
+
+jobs = driver.find_elements(By.CLASS_NAME, "job-card-container")
+for job in jobs:
+    job.click()
+    time.sleep(3)
+    save_button = driver.find_element(By.CLASS_NAME, "jobs-save-button")
+    if save_button.text.split('\n')[0] == "Save":
+        save_button.click()
+        time.sleep(3)
+        driver.find_element(By.CLASS_NAME, "artdeco-toast-item__dismiss").click()
+    else:
+        time.sleep(3)
+
+time.sleep(200)
